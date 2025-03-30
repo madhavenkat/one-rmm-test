@@ -32,10 +32,6 @@ jobs:
       
     - name: Archive artifact
       uses: actions/upload-artifact@v3
-        with:
+      with:
           name: SparkHtml
-          path: /test-output/reports/*.html
-
-      - name: Notify on Failure
-        if: failure()
-        run: echo "Tests failed. Please check the reports."
+          path: ./test-output/reports/*.html
