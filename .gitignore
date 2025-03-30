@@ -1,5 +1,4 @@
 target/
-test-output/
 build/
 *.jar
 
