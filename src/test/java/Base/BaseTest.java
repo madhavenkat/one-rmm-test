@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
@@ -58,8 +59,15 @@ public class BaseTest {
 			prop.load(reader);
 			loct.load(readloct);
 			
+			ChromeOptions options = new ChromeOptions();
+	        options.addArguments("--headless=new");  // New headless mode
+	        options.addArguments("--disable-gpu");   // Disable GPU acceleration
+	        options.addArguments("--window-size=1920,1080"); // Set resolution
+	        options.addArguments("--no-sandbox");    // Bypass OS security model
+	        options.addArguments("--disable-dev-shm-usage"); // Overcome limited resources
+			
 			WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver();
+			driver = new ChromeDriver(options);
 			driver.get(prop.getProperty("url"));
 		}
 	}
