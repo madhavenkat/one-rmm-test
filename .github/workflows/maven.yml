@@ -33,5 +33,5 @@ jobs:
     - name: Archive artifact
       uses: actions/upload-artifact@v4
       with:
-        name: SparkHtml
+        name: Sparkhtml
         path: test-output/reports/*.html
