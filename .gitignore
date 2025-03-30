@@ -2,3 +2,5 @@ target/
 test-output/
 build/
 *.jar
+
+*.DS_Store
