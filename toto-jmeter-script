@@ -1,0 +1,39 @@
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import java.util.concurrent.TimeUnit
+import java.nio.ByteBuffer
+
+// --- Secret Key from your Authenticator (Base32 encoded) ---
+String base32Secret = 'JBSWY3DPEHPK3PXP' // Replace with your secret key
+
+// --- Decode Base32 to byte[] ---
+byte[] secretKey = base32Secret.decodeBase32()
+
+// --- Time steps ---
+long timeStep = 30
+long currentTimeSeconds = System.currentTimeMillis() / 1000
+long timeCounter = currentTimeSeconds / timeStep
+
+// --- Convert time counter to byte[8] (big-endian) ---
+ByteBuffer buffer = ByteBuffer.allocate(8)
+buffer.putLong(timeCounter)
+byte[] timeBytes = buffer.array()
+
+// --- HMAC-SHA1 ---
+Mac mac = Mac.getInstance("HmacSHA1")
+mac.init(new SecretKeySpec(secretKey, "HmacSHA1"))
+byte[] hash = mac.doFinal(timeBytes)
+
+// --- Dynamic Truncation to get OTP ---
+int offset = hash[hash.length - 1] & 0xF
+int binary =
+    ((hash[offset] & 0x7F) << 24) |
+    ((hash[offset + 1] & 0xFF) << 16) |
+    ((hash[offset + 2] & 0xFF) << 8) |
+    (hash[offset + 3] & 0xFF)
+
+int otp = binary % 1000000
+String otpString = String.format('%06d', otp)
+
+// --- Save to a JMeter variable ---
+vars.put("TOTP_OTP", otpString)
